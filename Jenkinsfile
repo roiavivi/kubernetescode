@@ -17,7 +17,7 @@ pipeline {
         container(name: 'kaniko', shell: '/busybox/sh') {
           sh '''#!/busybox/sh
             echo "FROM jenkins/inbound-agent:latest" > Dockerfile
-            /kaniko/executor --context `pwd` --dockerfile `pwd`/Dockerfile --destination roie710/flask:latest
+            /kaniko/executor --context `pwd` --dockerfile `pwd`/Dockerfile --destination roie710/flask:${BUILD_NUMBER}
           '''
         }
       }
