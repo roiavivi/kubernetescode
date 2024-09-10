@@ -7,7 +7,7 @@ pipeline {
   }
 
   parameters {
-    booleanParam(name: 'TRIGGER_FLASK_CD', defaultValue: true, description: 'Trigger flask-cd job')
+    booleanParam(name: 'TRIGGER_FLASK_CD', defaultValue: false, description: 'Trigger flask-cd job')
   }
 
   stages {
