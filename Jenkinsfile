@@ -13,7 +13,7 @@ pipeline {
   stages {
     stage('Test image') {
       steps {
-        sh 'echo "Tests passed"'
+        sh 'ls -l'
       }
     }
 
