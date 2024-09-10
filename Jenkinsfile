@@ -1,34 +1,24 @@
-node {
-    def app
-
-    stage('Clone repository') {
-      
-
-        checkout scm
+pipeline {
+  agent {
+    kubernetes {
+      inheritFrom 'builder'
     }
-
-    stage('Build image') {
-  
-       app = docker.build("roie710/test")
-    }
-
+  }
+  stages {
     stage('Test image') {
-  
-
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
+		sh 'echo "Tests passed"'
     }
 
-    stage('Push image') {
-        
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-            app.push("${env.BUILD_NUMBER}")
+    stage('Build with Kaniko') {
+      steps {
+        container(name: 'kaniko', shell: '/busybox/sh') {
+          sh '''#!/busybox/sh
+            #sleep 90000
+            echo "FROM jenkins/inbound-agent:latest" > Dockerfile
+            /kaniko/executor --context `pwd` --dockerfile `pwd`/Dockerfile --destination roie710/flask:latest
+          '''
         }
+      }
     }
-    
-    stage('Trigger ManifestUpdate') {
-                echo "triggering updatemanifestjob"
-                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
+  }
 }
