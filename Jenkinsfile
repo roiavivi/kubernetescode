@@ -7,9 +7,9 @@ pipeline {
   }
   stages {
     stage('Test image') {
-	    steps {
-		sh 'echo "Tests passed"'
-	    }
+      steps {
+        sh 'echo "Tests passed"'
+      }
     }
 
     stage('Build with Kaniko') {
@@ -20,6 +20,16 @@ pipeline {
             /kaniko/executor --context `pwd` --dockerfile `pwd`/Dockerfile --destination roie710/flask:${BUILD_NUMBER}
           '''
         }
+      }
+    }
+
+    stage('Trigger flask-cd job') {
+      steps {
+        build job: 'flask-cd', 
+              parameters: [
+                string(name: 'BUILD_NUMBER', value: "${BUILD_NUMBER}")
+              ],
+              wait: true
       }
     }
   }
