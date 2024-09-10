@@ -6,7 +6,9 @@ pipeline {
   }
   stages {
     stage('Test image') {
+	    steps {
 		sh 'echo "Tests passed"'
+	    }
     }
 
     stage('Build with Kaniko') {
