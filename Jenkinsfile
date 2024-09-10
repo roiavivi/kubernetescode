@@ -5,6 +5,11 @@ pipeline {
       yamlFile 'BuilderPod.yaml'
     }
   }
+
+  parameters {
+    booleanParam(name: 'TRIGGER_FLASK_CD', defaultValue: true, description: 'Trigger flask-cd job')
+  }
+
   stages {
     stage('Test image') {
       steps {
@@ -24,6 +29,9 @@ pipeline {
     }
 
     stage('Trigger flask-cd job') {
+      when {
+        expression { return params.TRIGGER_FLASK_CD }
+      }
       steps {
         build job: 'flask-cd', 
               parameters: [
