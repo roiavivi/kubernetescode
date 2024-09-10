@@ -1,7 +1,8 @@
 pipeline {
+
   agent {
     kubernetes {
-      inheritFrom 'builder'
+      yamlFile 'builder.yaml'
     }
   }
   stages {
